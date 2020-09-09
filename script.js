@@ -127,25 +127,50 @@ function moveBall() {
     ball.dy = -ball.speed;
   }
 
-
   // Brick collision
-  bricks.forEach(column => {
-      column.forEach(brick => {
-          if(brick.visible){
-              if(ball.x - ball.size > brick.x && // left brick side check
-                ball.x + ball.size < brick.x + brick.w && // right brick side check
-                ball.y + ball.size > brick.y && // top brick side check
-                ball.y - ball.size < brick.y + brick.h // bottom brick side check
-                ){
-                    // bounce
-                    ball.dy *= -1
-                    // set to invisible
-                    brick.visible = false
+  bricks.forEach((column) => {
+    column.forEach((brick) => {
+      if (brick.visible) {
+        if (
+          ball.x - ball.size > brick.x && // left brick side check
+          ball.x + ball.size < brick.x + brick.w && // right brick side check
+          ball.y + ball.size > brick.y && // top brick side check
+          ball.y - ball.size < brick.y + brick.h // bottom brick side check
+        ) {
+          // bounce
+          ball.dy *= -1;
+          // set to invisible
+          brick.visible = false;
+          increaseScore();
+        }
+      }
+    });
+  });
+  // Hit bottom wall - Lose
+  if(ball.y + ball.size > canvas.height ){
+      showAllBricks()
+      score = 0;
+  }
 
-              }
-          }
-      })
-  })
+}
+
+// Increase score
+function increaseScore(){
+    score++;
+    // are there any bricks left?
+    if(score % (brickRowCount * brickRowCount) === 0){
+        showAllBricks()
+
+    }
+}
+
+// Make all bricks appear
+function showAllBricks(){
+    bricks.forEach(column =>{
+        column.forEach(brick =>{
+            brick.visible = true;
+        })
+    })
 }
 
 // Draw everything
